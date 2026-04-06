@@ -1,0 +1,16 @@
+deployment:
+  role: data_plane
+  role_data_plane:
+    config_provider: yaml
+
+nginx_config:
+  error_log_level: "info"
+
+apisix:
+  extra_lua_path: "opt/custom-plugins/?.lua"
+
+plugins:
+  - core-json
+  - resty-http
+  - resty-jwt
+  - resty-openssl
