@@ -1,0 +1,31 @@
+upstreams:
+  -
+    id: httpbin
+    type: roundrobin
+    nodes:
+      "httpbin.org": 1
+
+routes:
+  - uri: /headers
+    upstream_id: httpbin
+
+  - uri: /core-json
+    plugins:
+      proxy-rewrite:
+        regex_uri:
+          - "^/core-json$"
+          - "/headers"
+      core-json:
+    upstream_id: httpbin
+
+  - id: resty-http
+    uri: /resty-http
+    plugins:
+      proxy-rewrite:
+        regex_uri:
+          - "^/resty-http$"
+          - "/headers"
+      resty-http:
+        uri: http://host.docker.internal:8080/client
+    upstream_id: httpbin
+#END
