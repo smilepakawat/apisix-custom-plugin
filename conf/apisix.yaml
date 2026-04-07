@@ -28,4 +28,15 @@ routes:
       resty-http:
         uri: http://host.docker.internal:8080/client
     upstream_id: httpbin
+
+  - id: resty-jwt
+    uri: /resty-jwt
+    plugins:
+      proxy-rewrite:
+        regex_uri:
+          - "^/resty-jwt$"
+          - "/headers"
+      resty-jwt:
+        signed_key: "signed-key"
+    upstream_id: httpbin
 #END
