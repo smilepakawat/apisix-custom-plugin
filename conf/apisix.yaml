@@ -9,15 +9,6 @@ routes:
   - uri: /headers
     upstream_id: httpbin
 
-  - uri: /core-json
-    plugins:
-      proxy-rewrite:
-        regex_uri:
-          - "^/core-json$"
-          - "/headers"
-      core-json:
-    upstream_id: httpbin
-
   - id: resty-http
     uri: /resty-http
     plugins:

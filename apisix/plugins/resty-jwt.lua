@@ -23,13 +23,29 @@ function _M.check_schema(conf, _)
 end
 
 function _M.access(conf, ctx)
-    local token = core.request.header(ctx, "x-token")
-    local result = jwt:verify(conf.signed_key, token)
-    if not result.verified then
-        core.response.exit(401, result.reason)
+    local type = core.request.get_uri_args(ctx)["type"]
+    if type == "verify" then
+        local token = core.request.header(ctx, "x-token")
+        local result = jwt:verify(conf.signed_key, token)
+        if not result.verified then
+            core.response.exit(401, result.reason)
+        end
+        core.request.set_header(ctx, "x-token-verifeid", "yes")
+    elseif type == "sign" then
+        local x_message = core.request.header(ctx, "x-message")
+        local header = {
+            type = "JWT",
+            alg = "HS256",
+        }
+        local jwt_table = {
+            header = header,
+            payload = core.json.decode(x_message),
+        }
+        local jwt_token = jwt:sign(conf.signed_key, jwt_table)
+        core.request.set_header(ctx, "x-token", jwt_token)
+    else
+        core.response.exit(400)
     end
-    core.request.set_header(ctx, "x-token-verifeid", "yes")
-    core.request.set_header(ctx, "x-token-payload", core.json.encode(result.payload))
 end
 
 return _M
