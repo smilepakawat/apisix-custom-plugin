@@ -30,4 +30,15 @@ routes:
       resty-jwt:
         signed_key: "signed-key"
     upstream_id: httpbin
+
+  - id: resty-openssl
+    uri: /resty-openssl
+    plugins:
+      proxy-rewrite:
+        regex_uri:
+          - "^/resty-openssl$"
+          - "/headers"
+      resty-openssl:
+        pkey: "-----BEGIN PRIVATE KEY-----\nMIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALExiCSJY1q3GKKld5HlF0rq/Xj5+p76SVrK/Q9lYBpSyiEAHiOgdmGqWtxiOHnqIcvR6mspXCbo2nEBrtCCpH4jNQhcghD6pECMjhLtlKSpHA7hVmUaaGvqVx2l75Q5gR83gjwHYeFChp4GKGIwj1R5fwgZS2Z+JpcZ+Y49Zx2nAgMBAAECgYBW9PndBFdv018RoqZ1QLoXmA7gab0me6m4FtntzlBFWs+7NjWUQlEWSOXiNYmFuvLu9YtXH6sLpUZeIvdJeHOEabzPdXpmarSV8cU7xFJkMpIxCUbtMAwi1fWPgFtDs8Nl5DHqhoeQqA6iL2lKTcBDo/IuW8TShk+f2FTijzIkAQJBAOdT5vVBE0kd1+NVG3Cv4G7r6QtY3i13KDtAZ0IlOlkwgeir0vT2htHQTvbEoNL4beZcMgNTuGoUWmW+L42ygwECQQDEF5C5t6/ay8veMWSOJiS1CPkng5CUtOADAz9QNBZalUcTZWB84zufkZCdqmRbKkmTbI5/IzuwPUxB9OM2+6inAkBkt50ZLyosbXfvnMCDwa+f28rti9XASd8UXSgYHolXB82n9he1XBi7BU08F8RF1rBS2dVUqYDjftUU80dVFGIBAkEApbakf85TtrtzVhq3t8lUTAmBRXtRu9n/VYxw/P6HxZVRs3qAyAngYUFKzXMpzEE4XHXpFlhYIOAsibDCM70JEQJBAI6lKiTdies0AIcrS1iS1OF/WdLkb/3R42DL2UGZn++ZsE6VTIeukUkAGYf9J0xAIHrBQrdj5ZA/dlGF3DyvFNA=\n-----END PRIVATE KEY-----"
+    upstream_id: httpbin
 #END
