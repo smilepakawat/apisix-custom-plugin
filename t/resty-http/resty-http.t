@@ -44,7 +44,6 @@ __DATA__
             ngx.say(require("toolkit.json").encode(conf))
         }
     }
---- error_code: 200
 --- response_body_like eval
 qr/{"uri":"127.0.0.1:1980"}/
 --- no_error_log
@@ -68,13 +67,12 @@ qr/{"uri":"127.0.0.1:1980"}/
             ngx.say("done")
         }
     }
---- error_code: 200
 --- response_body
 property "uri" validation failed: wrong type: expected string, got number
 done
 
 
-=== TEST 3: enable resty-http plugin with invlid config using admin api
+=== TEST 3: set uri to the resty-http plugin
 --- config
     location /t {
         content_by_lua_block {
@@ -83,7 +81,9 @@ done
                 ngx.HTTP_PUT,
                 [[{
                     "plugins": {
-                        "resty-http": {}
+                        "resty-http": {
+                            "uri": "http://127.0.0.1:1984/mock_endpoint"
+                        }
                     },
                     "upstream": {
                         "nodes": {
@@ -91,7 +91,7 @@ done
                         },
                         "type": "roundrobin"
                     },
-                    "uri": "/hello"
+                    "uri": "/echo"
                 }]]
             )
 
@@ -101,14 +101,31 @@ done
             ngx.say(body)
         }
     }
---- error_code: 400
-
-
-=== TEST 4: verify
---- request
-GET /hello
---- error_code: 404
 --- response_body
-{"error_msg":"404 Route Not Found"}
+passed
 
 
+=== TEST 4: should pass through when custom route to verify http request return 200
+--- config
+    location /mock_endpoint {
+        return 200 'hello world';
+    }
+--- request
+GET /echo
+--- more_headers
+x-client: smile
+--- response_headers
+x-client: smile
+x-http-verified: yes
+
+
+=== TEST 5: should exit 500 when custom route to verify http request return 500
+--- config
+    location /mock_endpoint {
+        return 500 'server error';
+    }
+--- request
+GET /echo
+--- more_headers
+x-client: smile
+--- error_code: 500
