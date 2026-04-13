@@ -50,7 +50,27 @@ qr/{"uri":"127.0.0.1:1980"}/
 [error]
 
 
-=== TEST 2: wrong uri type
+=== TEST 2: check schema uri does not exist
+--- config
+    location = /t {
+        content_by_lua_block {
+            local plugin = require("apisix.plugins.resty-http")
+            local conf = {}
+
+            local ok, err = plugin.check_schema(conf, _)
+            if not ok then
+                ngx.say(err)
+            end
+
+            ngx.say("done")
+        }
+    }
+--- response_body
+property "uri" is required
+done
+
+
+=== TEST 3: check schema wrong type uri
 --- config
     location = /t {
         content_by_lua_block {
@@ -72,7 +92,7 @@ property "uri" validation failed: wrong type: expected string, got number
 done
 
 
-=== TEST 3: set uri to the resty-http plugin
+=== TEST 4: set uri to the resty-http plugin
 --- config
     location /t {
         content_by_lua_block {
@@ -105,7 +125,7 @@ done
 passed
 
 
-=== TEST 4: should pass through when custom route to verify http request return 200
+=== TEST 5: should pass through when custom route to verify http request return 200
 --- config
     location /mock_endpoint {
         return 200 'hello world';
@@ -119,7 +139,7 @@ x-client: smile
 x-http-verified: yes
 
 
-=== TEST 5: should exit 500 when custom route to verify http request return 500
+=== TEST 6: should exit 500 when custom route to verify http request return 500
 --- config
     location /mock_endpoint {
         return 500 'server error';
