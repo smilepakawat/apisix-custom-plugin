@@ -30,16 +30,20 @@ function _M.access(conf, ctx)
         if not result.verified then
             core.response.exit(401, result.reason)
         end
-        core.request.set_header(ctx, "x-token-verifeid", "yes")
+        core.request.set_header(ctx, "x-token-verified", "yes")
     elseif type == "sign" then
         local x_message = core.request.header(ctx, "x-message")
+        local x_message_json = core.json.decode(x_message)
+        if not x_message_json then
+            core.response.exit(500)
+        end
         local header = {
             type = "JWT",
             alg = "HS256",
         }
         local jwt_table = {
             header = header,
-            payload = core.json.decode(x_message),
+            payload = x_message_json,
         }
         local jwt_token = jwt:sign(conf.signed_key, jwt_table)
         core.request.set_header(ctx, "x-token", jwt_token)
