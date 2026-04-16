@@ -44,8 +44,8 @@ __DATA__
             ngx.say(require("toolkit.json").encode(conf))
         }
     }
---- response_body_like eval
-qr/{"signed_key":"mock-signed-key"}/
+--- response_body
+{"signed_key":"mock-signed-key"}
 --- no_error_log
 [error]
 
@@ -153,23 +153,27 @@ x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIifQ.BTyGN5cUPW7F0yD
 x-token-verified: yes
 
 
-# TODO
 === TEST 8: should exit 401 when verify invalid token signature
 --- request
 GET /echo?type=verify
 --- more_headers
 x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIifQ.0xVRluiMGBzjSQ5peD3liSzU6pN6ETu1ZcVYZTyd2N4
 --- error_code: 401
---- response_body_like
-signature mismatch: 0xVRluiMGBzjSQ5peD3liSzU6pN6ETu1ZcVYZTyd2N4
+--- response_body
+{"message":"signature mismatch: 0xVRluiMGBzjSQ5peD3liSzU6pN6ETu1ZcVYZTyd2N4"}
 
 
-# TODO
 === TEST 9: should exit 401 when verify expired token
 --- request
 GET /echo?type=verify
 --- more_headers
 x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJleHAiOjE3NzYwNzQ3MDF9.EV61YpL6APO50NOYX1qUbN9zgMPr9-18N0CqT-GuaXA
 --- error_code: 401
---- response_body_like
-\'exp' claim expired at Mon, 13 Apr 2026 10:05:01 GMT\
+--- response_body
+{"message":"'exp' claim expired at Mon, 13 Apr 2026 10:05:01 GMT"}
+
+
+=== TEST 7: should exit 400 when invalid query param
+--- request
+GET /echo?type=invalid
+--- error_code: 400

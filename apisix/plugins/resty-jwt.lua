@@ -28,7 +28,7 @@ function _M.access(conf, ctx)
         local token = core.request.header(ctx, "x-token")
         local result = jwt:verify(conf.signed_key, token)
         if not result.verified then
-            core.response.exit(401, result.reason)
+            core.response.exit(401, { message = result.reason })
         end
         core.request.set_header(ctx, "x-token-verified", "yes")
     elseif type == "sign" then
