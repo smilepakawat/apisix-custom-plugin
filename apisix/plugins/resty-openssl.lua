@@ -38,14 +38,14 @@ function _M.access(conf, ctx)
         local x_content_signature = core.request.header(ctx, "x-content-signature")
         local verified, err = pk:verify(ngx_decode_base64(x_content_signature), message)
         if not verified then
-            core.response.exit(401, err)
+            core.response.exit(401, { message = err })
         end
 
         core.request.set_header(ctx, "x-content-signature-verified", "yes")
     elseif type == "sign" then
         local signature, err = pk:sign(message)
         if not signature then
-            core.response.exit(400, err)
+            core.response.exit(400, { message = err })
         end
 
         core.request.set_header(ctx, "x-content-signature", ngx_encode_base64(signature))
