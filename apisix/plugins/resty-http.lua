@@ -26,18 +26,15 @@ function _M.access(conf, ctx)
     local x_client = core.request.header(ctx, "x-client")
     local httpc = http.new()
     httpc:set_timeout(3000)
-    local res, err = httpc:request_uri(
-        conf.uri,
-        {
-            method = "GET",
-            headers = {
-                ["x-client"] = x_client,
-            },
-        }
-    )
+    local res, err = httpc:request_uri(conf.uri, {
+        method = "GET",
+        headers = {
+            ["x-client"] = x_client,
+        },
+    })
     if err then
         core.log.error("http error: ", err)
-        return core.response.exit(500)
+        core.response.exit(500)
     end
 
     if res.status ~= 200 then

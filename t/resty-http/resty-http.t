@@ -92,6 +92,45 @@ property "uri" validation failed: wrong type: expected string, got number
 done
 
 
+=== TEST 4: set unreal uri to the resty-http plugin
+--- config
+    location /t {
+        content_by_lua_block {
+            local t = require("lib.test_admin").test
+            local code, body = t("/apisix/admin/routes/1",
+                ngx.HTTP_PUT,
+                [[{
+                    "plugins": {
+                        "resty-http": {
+                            "uri": "http://127.0.0.1:199999/dead-api"
+                        }
+                    },
+                    "upstream": {
+                        "nodes": {
+                            "127.0.0.1:1980": 1
+                        },
+                        "type": "roundrobin"
+                    },
+                    "uri": "/trigger-error"
+                }]]
+            )
+
+            if code >= 300 then
+                ngx.status = code
+            end
+            ngx.say(body)
+        }
+    }
+--- response_body
+passed
+
+
+=== TEST 5: verify the plugin handles the httpc error and exits with 500
+--- request
+GET /trigger-error
+--- error_code: 500
+--- error_log
+http error:
 === TEST 4: set uri to the resty-http plugin
 --- config
     location /t {
@@ -125,7 +164,7 @@ done
 passed
 
 
-=== TEST 5: should pass through when custom route to verify http request return 200
+=== TEST 6: should pass through when custom route to verify http request return 200
 --- config
     location /mock_endpoint {
         return 200 'hello world';
@@ -139,7 +178,7 @@ x-client: smile
 x-http-verified: yes
 
 
-=== TEST 6: should exit 500 when custom route to verify http request return 500
+=== TEST 7: should exit 500 when custom route to verify http request return 500
 --- config
     location /mock_endpoint {
         return 500 'server error';
