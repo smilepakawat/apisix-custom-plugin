@@ -1,4 +1,4 @@
-std = "lua52+openresty"
+std = "lua51+openresty"
 
 [lints]
 
