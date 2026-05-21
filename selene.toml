@@ -1,0 +1,89 @@
+std = "lua52+openresty"
+
+[lints]
+
+# ==========================================
+# ERRORS (Deny by default)
+# Selene will fail and exit with an error code
+# ==========================================
+
+# Prevents using variables that haven't been defined locally or in your std/globals.
+undefined_variable = "deny"
+
+# Prevents invalid escape sequences in strings (e.g., \z in Lua 5.1).
+bad_string_escape = "deny"
+
+
+# ==========================================
+# WARNINGS (Warn by default)
+# Selene will report these but not fail a CI build (unless configured otherwise)
+# ==========================================
+
+# Warns if you declare a variable but never use it.
+# (Tip: In APISIX/Kong, you can prefix unused params with an underscore, e.g., `_conf`, 
+# to tell Selene to ignore them without changing this to "allow").
+unused_variable = "warn"
+
+# Warns on `if true then` or `if "string" then`.
+constant_if_condition = "warn"
+
+# Warns when using standard library functions marked as deprecated.
+deprecated = "warn"
+
+# Warns on hardcoded division by zero (e.g., `local x = 10 / 0`).
+divide_by_zero = "warn"
+
+# Warns on empty `if` blocks.
+empty_if = "warn"
+
+# Warns on empty `while` or `for` loops.
+empty_loop = "warn"
+
+# Warns if the `then` and `else` blocks of an if-statement are identical.
+if_same_then_else = "warn"
+
+# Warns if you pass the wrong types/number of arguments to standard Lua functions.
+incorrect_standard_library_use = "warn"
+
+# Warns if a numeric for-loop counts in the wrong direction without a negative step.
+suspicious_reverse_loop = "warn"
+
+# Warns if assigning multiple variables doesn't match the number of values (e.g., `a, b = 1`).
+unbalanced_assignments = "warn"
+
+# Warns if you use an unrecognized `selene: allow()` comment option.
+unrecognized_opt = "warn"
+
+# Warns if you manually type 3.1415... instead of using `math.pi`.
+manual_math_pi = "warn"
+
+# Warns if you manually type `math.pow(2, 1024)` instead of using `math.huge`.
+manual_math_huge = "warn"
+
+
+# ==========================================
+# ALLOWED (Ignored by default)
+# Selene ignores these unless you explicitly turn them on
+# ==========================================
+
+# Warns on multiple statements on the same line (e.g., `local a = 1; local b = 2`).
+multiple_statements = "allow"
+
+# Warns if a local variable has the exact same name as a variable in an outer scope.
+# RECOMMENDED FOR APISIX/KONG: Change to "warn" so you don't accidentally shadow `err` variables.
+shadowing = "allow"
+
+# Warns anytime you read or write to a global variable.
+global_usage = "allow"
+
+# Warns if you declare a variable without `local` (implicitly making it global).
+# HIGHLY RECOMMENDED FOR APISIX/KONG: Change to "deny" or "warn". 
+# Leaking global variables in OpenResty causes worker memory leaks and race conditions!
+unscoped_variables = "allow"
+
+# Warns if a function is too complex (too many branches/loops).
+# Note: If you enable this, you must also define `[config.high_cyclomatic_complexity]` below.
+high_cyclomatic_complexity = "allow"
+
+# [config]
+# high_cyclomatic_complexity = { maximum_complexity = 2 }

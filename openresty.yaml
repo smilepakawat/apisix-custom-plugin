@@ -1,0 +1,13 @@
+# openresty.yml
+globals:
+  # Standard OpenResty / NGINX globals
+  ngx:
+    any: true
+  ndk:
+    any: true
+  jit:
+    any: true
+
+  # ONLY FOR KONG: Uncomment the lines below to whitelist the Kong global
+  # kong:
+  #   any: true

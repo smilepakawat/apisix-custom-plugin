@@ -1,0 +1,33 @@
+# stylua.toml
+
+# APISIX runs exclusively on OpenResty's LuaJIT. 
+# Explicitly setting this ensures StyLua correctly parses LuaJIT-specific syntax 
+# like `ffi.cdef` or bitwise operators without throwing errors.
+syntax = "LuaJIT"
+
+# The APISIX core codebase standardizes on 4 spaces for indentation.
+indent_type = "Spaces"
+indent_width = 4
+
+# 120 is highly recommended for APISIX. 
+# Gateway plugins often have long logging statements (e.g., `core.log.warn(...)`) 
+# or nested configuration tables. Forcing 80 columns causes StyLua to aggressively 
+# and awkwardly wrap these statements across multiple lines.
+column_width = 120
+
+# Standard line endings for Linux/Docker environments where APISIX typically runs.
+line_endings = "Unix"
+
+# Both single and double quotes are accepted in APISIX, but double quotes 
+# are generally preferred for strings, falling back to single if the string 
+# contains double quotes.
+quote_style = "AutoPreferDouble"
+
+# APISIX style prefers explicit function calls for clarity, even when 
+# passing a single table or string (e.g., `require("apisix.core")` instead of `require "apisix.core"`).
+call_parentheses = "Always"
+
+# Standard Lua formatting conventions applied to APISIX.
+space_after_function_names = "Never"
+block_newline_gaps = "Never"
+collapse_simple_statement = "Never"
