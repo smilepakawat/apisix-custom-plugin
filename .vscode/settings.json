@@ -1,4 +1,8 @@
 {
+    "[lua]": {
+        "editor.defaultFormatter": "JohnnyMorganz.stylua",
+        "editor.formatOnSave": true
+    },
     "Lua.runtime.version": "LuaJIT",
     "Lua.runtime.path": [
         "?.lua",
