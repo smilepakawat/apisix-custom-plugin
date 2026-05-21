@@ -1,0 +1,16 @@
+{
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "src/?.lua",
+        "src/?/init.lua"
+    ],
+    "Lua.diagnostics.globals": [
+        "ngx"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
+    ],
+    "Lua.workspace.checkThirdParty": false
+}
