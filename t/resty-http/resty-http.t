@@ -131,7 +131,9 @@ GET /trigger-error
 --- error_code: 500
 --- error_log
 http error:
-=== TEST 4: set uri to the resty-http plugin
+
+
+=== TEST 6: set uri to the resty-http plugin
 --- config
     location /t {
         content_by_lua_block {
@@ -164,7 +166,7 @@ http error:
 passed
 
 
-=== TEST 6: should pass through when custom route to verify http request return 200
+=== TEST 7: should pass through when custom route to verify http request return 200
 --- config
     location /mock_endpoint {
         return 200 'hello world';
@@ -178,7 +180,7 @@ x-client: smile
 x-http-verified: yes
 
 
-=== TEST 7: should exit 500 when custom route to verify http request return 500
+=== TEST 8: should exit 500 when custom route to verify http request return 500
 --- config
     location /mock_endpoint {
         return 500 'server error';
